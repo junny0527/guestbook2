@@ -3,7 +3,6 @@ package com.javaex.controller;
 import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.javaex.dao.GuestBookDao;
+import com.javaex.util.WebUtil;
 import com.javaex.vo.GuestBookVo;
 
 
@@ -37,9 +37,11 @@ public class GuestController extends HttpServlet {
 			request.setAttribute("bList", bookList);
 
 			// 데이터 + html --> jsp로 실행
-			RequestDispatcher rd = request.getRequestDispatcher("/addList.jsp");
-			rd.forward(request, response);
-
+			WebUtil.forward(request, response, "/WEB-INF/addList.jsp");
+			/*
+			 * RequestDispatcher rd = request.getRequestDispatcher("/addList.jsp");
+			 * rd.forward(request, response);
+			 */
 		}else if ("add".equals(action)) {
 			String name = request.getParameter("name");
 			String password = request.getParameter("password");
@@ -50,7 +52,10 @@ public class GuestController extends HttpServlet {
 			
 			guestbookDao.guestBookInsert(guestbookVo);
 			
-			response.sendRedirect("./gbc?action=addList");
+			//리다이텍트 list
+	         WebUtil.redirect(request, response, "/guestbook2/gbc?action=addList");
+			
+			/* response.sendRedirect("./gbc?action=addList"); */
 			
 		}else if("deleteForm".equals(action)) {
 			GuestBookDao guestbookDao = new GuestBookDao();
@@ -59,17 +64,20 @@ public class GuestController extends HttpServlet {
 	         System.out.println(guestbookVo);
 	         request.setAttribute("guestbookVo", guestbookVo);
 	         
-	         RequestDispatcher rd = request.getRequestDispatcher("/deleteForm.jsp");
-	         rd.forward(request, response);
+	         WebUtil.forward(request, response, "/WEB-INF/deleteForm.jsp");
+				/*
+				 * RequestDispatcher rd = request.getRequestDispatcher("/deleteForm.jsp");
+				 * rd.forward(request, response);
+				 */
 		}else if("delete".equals(action)){
 			
 			int no = Integer.parseInt(request.getParameter("no"));
 			
 			GuestBookDao guestbookDao = new GuestBookDao();
-			GuestBookVo guestbookVo = new GuestBookVo(no);
+			GuestBookVo guestbookVo = guestbookDao.guestBookList(no);
 			guestbookDao.guestBookDelete(guestbookVo);
-			 
-			 response.sendRedirect("./gbc?action=addList");
+			WebUtil.redirect(request, response, "/guestbook2/gbc?action=addList");
+			/* response.sendRedirect("./gbc?action=addList"); */
 			
 		}
 	}
