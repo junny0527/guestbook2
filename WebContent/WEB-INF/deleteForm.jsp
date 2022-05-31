@@ -4,7 +4,7 @@
 <%@ page import="java.util.List" %>
 
 <%
-	GuestBookVo guestVo= (GuestBookVo)request.getAttribute("guestbookVo");
+	GuestBookVo guestbookVo= (GuestBookVo)request.getAttribute("guestbookVo");
 %>
 
 <!DOCTYPE html>
@@ -16,7 +16,7 @@
 <body>
 	<form action ="./gbc?action=delete" method ="post">
 		비밀번호 <input type="password" name="password" value=""><button type ="submit">확인</button>
-		<input type ="hidden" name="no" value="<%=guestVo.getNo()%>">
+		<input type ="hidden" name="no" value="<%=guestbookVo.getNo()%>">
 		<input type="hidden" name="action" value="delete">
 	</form>
 	<a href="./gbc?action=addList">메인으로 돌아가기</a>
